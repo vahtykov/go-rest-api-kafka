@@ -18,7 +18,10 @@ func NewServer(db *gorm.DB) *Server {
 	plansHandler := handlers.NewPlansHandler(db)
 	
 	router.GET("/health", handlers.HealthCheck)
-	router.GET("/plans", plansHandler.GetAllPlans)
+	// router.PUT("/release/save", plansHandler.Release)
+	// router.PATCH("/release/update", plansHandler.Release)
+	// router.PATCH("/plan/update", plansHandler.Plans)
+	router.PUT("/plan/save", plansHandler.CreatePlan)
 
 	return &Server{
 		router: router,

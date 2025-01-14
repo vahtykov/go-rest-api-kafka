@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: track_postgres_db
+    environment:
+      POSTGRES_DB: track_db
+      POSTGRES_USER: track_user
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
