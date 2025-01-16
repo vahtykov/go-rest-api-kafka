@@ -21,20 +21,20 @@ type Plan struct {
 }
 
 type PlanPayload struct {
-    Code            string    `json:"code"`
-    Status          string    `json:"status"`
-    SourceCreatedAt time.Time `json:"createdAt"`
-    SourceUpdatedAt time.Time `json:"updatedAt"`
+    Code            string    `json:"code" binding:"required"`
+    Status          string    `json:"status" binding:"required"`
+    SourceCreatedAt time.Time `json:"createdAt" binding:"required"`
+    SourceUpdatedAt time.Time `json:"updatedAt" binding:"required"`
 }
 
 type PlanRequest struct {
-    ID        uuid.UUID   `json:"id"`
-    System    string      `json:"system"`
-    EventDate time.Time   `json:"eventDate"`
-    EventType string      `json:"eventType"`
-    SuitCode  string      `json:"suitCode"`
-    SpaceCode string      `json:"spaceCode"`
-    Payload   PlanPayload `json:"payload"`
+    ID        uuid.UUID   `json:"id" binding:"required"`
+    System    string      `json:"system" binding:"required"`
+    EventDate time.Time   `json:"eventDate" binding:"required"`
+    EventType string      `json:"eventType" binding:"required,oneof=CREATE UPDATE DELETE"`
+    SuitCode  string      `json:"suitCode" binding:"required"`
+    SpaceCode string      `json:"spaceCode" binding:"required"`
+    Payload   PlanPayload `json:"payload" binding:"required"`
 }
 
 func (Plan) TableName() string {

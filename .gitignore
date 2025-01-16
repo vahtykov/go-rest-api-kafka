@@ -41,3 +41,5 @@ tmp/
 # Local development files
 notes.txt
 TODO.md
+
+conf/

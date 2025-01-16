@@ -1,11 +1,16 @@
 package handlers
 
 import (
+	"bytes"
+	"fmt"
 	"go-rest-api-kafka/internal/models"
+	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -34,13 +39,37 @@ func (h *PlansHandler) GetAllPlans(c *gin.Context) {
 }
 
 func (h *PlansHandler) CreatePlan(c *gin.Context) {
+    // Логируем входящий запрос
+    body, _ := io.ReadAll(c.Request.Body)
+    c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+    log.Printf("Incoming request body: %s", string(body))
+
     var req models.PlanRequest
     if err := c.ShouldBindJSON(&req); err != nil {
+        log.Printf("Request validation error: %v", err)
+        
         c.JSON(http.StatusBadRequest, gin.H{
             "error": "Invalid request body",
+            "details": err.Error(),
+            "expected_format": models.PlanRequest{
+                ID:        uuid.UUID{},
+                System:    "Track",
+                EventDate: time.Now(),
+                EventType: "CREATE",
+                SuitCode:  "plan",
+                SpaceCode: "AAA",
+                Payload: models.PlanPayload{
+                    Code:            "PLAN-001",
+                    Status:          "active",
+                    SourceCreatedAt: time.Now(),
+                    SourceUpdatedAt: time.Now(),
+                },
+            },
         })
         return
     }
+
+    fmt.Println(req);
 
     plan := models.Plan{
         UUID:            req.ID,
